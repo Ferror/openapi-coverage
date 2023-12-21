@@ -1,0 +1,3 @@
+ferror_openapi_coverage:
+  excluded_routes:
+    - rest-docs.json
