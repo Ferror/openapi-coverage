@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ferror\OpenapiCoverage\Symfony;
 
 use Ferror\OpenapiCoverage\Symfony\Console\CheckCoverageCommand;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -27,7 +28,9 @@ class Bundle extends AbstractBundle
 
     public function configure(DefinitionConfigurator $definition): void
     {
-        $definition->rootNode()
+        /** @var ArrayNodeDefinition $root */
+        $root = $definition->rootNode();
+        $root
             ->children()
                 ->arrayNode('excluded_routes')
                     ->scalarPrototype()->end()
