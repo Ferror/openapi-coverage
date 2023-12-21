@@ -5,10 +5,10 @@
     "require": {
         "php": "^8.2",
         "nelmio/api-doc-bundle": "^4.12",
-        "symfony/console": "^6.4",
-        "symfony/dependency-injection": "^6.4",
-        "symfony/http-kernel": "^6.4",
-        "symfony/routing": "^6.4"
+        "symfony/console": "^5.4 || ^6.4",
+        "symfony/dependency-injection": "^5.4 || ^6.4",
+        "symfony/http-kernel": "^5.4 || ^6.4",
+        "symfony/routing": "^5.4 || 6.4"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.10",

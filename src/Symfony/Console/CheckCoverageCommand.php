@@ -14,27 +14,18 @@ use Symfony\Component\Routing\RouterInterface;
 
 class CheckCoverageCommand extends Command
 {
-    protected static $defaultName = 'ferror:check-openapi-coverage';
-
     public function __construct(
         private RouterInterface $router,
         private RenderOpenApi $renderOpenApi,
         private array $excludedPaths = [],
     ) {
-        parent::__construct();
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->setDescription('Check OpenAPI coverage against Symfony routes')
-            ->addArgument('openapi-schema', InputArgument::OPTIONAL, 'Path to OpenAPI schema YAML file')
-        ;
+        parent::__construct('ferror:check-openapi-coverage');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyPaths = $this->router->getRouteCollection();
+
         $symfonyPaths = array_map(fn (Route $route) => $route->getPath(), $symfonyPaths->all());
         $symfonyPaths = array_values($symfonyPaths);
         $symfonyPaths = array_filter($symfonyPaths, fn (string $route) => str_starts_with($route, '/risk/v1'));
@@ -48,7 +39,7 @@ class CheckCoverageCommand extends Command
 
         $missingPaths = array_diff($symfonyPaths, $openApiPaths);
 
-        $missingPathCoverage =  count($openApiPaths) / count($symfonyPaths);
+        $missingPathCoverage =  count($openApiPaths) / (count($symfonyPaths) <= 0 ? 1 : count($symfonyPaths));
         $output->writeln('Open API coverage: ' . round($missingPathCoverage * 100, 2) . '%');
 
         if (empty($missingPaths)) {

@@ -1,0 +1,4 @@
+framework:
+  test: true
+  http_method_override: false
+  secret: '$ecretf0rt3st'

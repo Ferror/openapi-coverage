@@ -1,0 +1,11 @@
+rest_product_get:
+  path: /products
+  methods: GET
+
+rest_product_post:
+  path: /products
+  methods: POST
+
+rest_product_delete:
+  path: /products/:id
+  methods: DELETE
