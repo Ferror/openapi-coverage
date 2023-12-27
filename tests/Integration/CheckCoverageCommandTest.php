@@ -25,7 +25,11 @@ class CheckCoverageCommandTest extends KernelTestCase
 
         $expectedDisplay = <<<TEXT
 Open API coverage: 0%
-OpenAPI schema covers all Symfony routes. Good job!
+Missing paths in OpenAPI schema:
+/products
+/products
+/products/:id
+
 TEXT;
 
         $this->assertEquals($expectedDisplay, $display);

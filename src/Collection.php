@@ -29,4 +29,9 @@ final readonly class Collection
     {
         return new self(array_values(array_diff($this->items, $items)));
     }
+
+    public function count(): int
+    {
+        return count($this->items);
+    }
 }

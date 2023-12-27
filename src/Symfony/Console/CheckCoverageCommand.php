@@ -49,18 +49,18 @@ class CheckCoverageCommand extends Command
 
         $this->logger?->debug('CoverageCommand: Open Api Paths ', ['open_api_paths_count' => count($openApiPaths)]);
 
-        $missingPaths = array_diff($paths->items, $openApiPaths);
+        $missingPaths = $paths->diff($openApiPaths);
 
-        $coverageCalculator = new CoverageCalculator(count($paths->items), count($openApiPaths));
+        $coverageCalculator = new CoverageCalculator($paths->count(), count($openApiPaths));
 
         $output->writeln('Open API coverage: ' . $coverageCalculator->calculate()->asPercentage() . '%');
 
-        if (empty($missingPaths)) {
+        if ($missingPaths->count() === 0) {
             $output->writeln('OpenAPI schema covers all Symfony routes. Good job!');
         } else {
             $output->writeln('Missing paths in OpenAPI schema:');
-            foreach ($missingPaths as $path) {
-                $output->writeln("- $path");
+            foreach ($missingPaths->items as $path) {
+                $output->writeln($path->path);
             }
         }
 
