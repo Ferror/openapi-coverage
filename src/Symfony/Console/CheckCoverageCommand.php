@@ -38,7 +38,7 @@ class CheckCoverageCommand extends Command
 
         $paths = Collection::create($paths)
             ->filter(fn (Route $route) => str_starts_with($route->path, $this->prefix))
-            ->map(fn (Route $route) => str_replace($this->prefix, '', $route->path))
+            ->map(fn (Route $route) => new Route(str_replace($this->prefix, '', $route->path), $route->method))
             ->filter(fn(Route $route) => !in_array($route->path, $this->excludedPaths, true))
         ;
 
