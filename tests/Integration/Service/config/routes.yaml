@@ -1,11 +1,11 @@
 rest_product_get:
-  path: /products
+  path: /v1/products
   methods: GET
 
 rest_product_post:
-  path: /products
+  path: /v1/products
   methods: POST
 
 rest_product_delete:
-  path: /products/:id
+  path: /v1/products/:id
   methods: DELETE

@@ -22,5 +22,12 @@ class CheckCoverageCommandTest extends KernelTestCase
         $commandTester->assertCommandIsSuccessful();
 
         $display = $commandTester->getDisplay();
+
+        $expectedDisplay = <<<TEXT
+Open API coverage: 0%
+OpenAPI schema covers all Symfony routes. Good job!
+TEXT;
+
+        $this->assertEquals($expectedDisplay, $display);
     }
 }
