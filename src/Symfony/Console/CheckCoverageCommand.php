@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ferror\OpenapiCoverage\Symfony\Console;
 
-use Ferror\OpenapiCoverage\Collection;
+use Ferror\OpenapiCoverage\RouteCollection;
 use Ferror\OpenapiCoverage\CoverageCalculator;
 use Ferror\OpenapiCoverage\Route;
 use Nelmio\ApiDocBundle\Render\RenderOpenApi;
@@ -36,7 +36,9 @@ class CheckCoverageCommand extends Command
             }
         }
 
-        $paths = Collection::create($paths)
+        $this->logger?->debug('CoverageCommand: Open Api Paths ', ['open_api_paths' => $paths]);
+
+        $paths = RouteCollection::create($paths)
             ->filter(fn (Route $route) => str_starts_with($route->path, $this->prefix))
             ->map(fn (Route $route) => new Route(str_replace($this->prefix, '', $route->path), $route->method))
             ->filter(fn(Route $route) => !in_array($route->path, $this->excludedPaths, true))
@@ -45,13 +47,26 @@ class CheckCoverageCommand extends Command
         $openApi = $this->renderOpenApi->render('json', 'default');
         $openApi = json_decode($openApi, true, 512, JSON_THROW_ON_ERROR);
 
-        $openApiPaths = array_keys($openApi['paths']);
+        $openApiPaths = [];
+        foreach ($openApi['paths'] as $path => $methods) {
+            foreach (array_keys($methods) as $method) {
+                $openApiPaths[] = new Route($path, $method);
+            }
+        }
 
-        $this->logger?->debug('CoverageCommand: Open Api Paths ', ['open_api_paths_count' => count($openApiPaths)]);
+        $openApiPaths = RouteCollection::create($openApiPaths);
 
-        $missingPaths = $paths->diff($openApiPaths);
+        $this->logger?->debug('CoverageCommand: Open Api Paths ', ['open_api_paths_count' => $openApiPaths->count()]);
 
-        $coverageCalculator = new CoverageCalculator($paths->count(), count($openApiPaths));
+        $missingPaths = RouteCollection::create();
+
+        foreach ($paths->items as $path) {
+            if (!$openApiPaths->contains($path)) {
+                $missingPaths->add($path);
+            }
+        }
+
+        $coverageCalculator = new CoverageCalculator($paths->count(), $openApiPaths->count());
 
         $output->writeln('Open API coverage: ' . $coverageCalculator->calculate()->asPercentage() . '%');
 

@@ -19,10 +19,6 @@ final readonly class CoverageCalculator
 
     public function calculate(): Coverage
     {
-        if ($this->numberOfPaths <= 0) {
-            return new Coverage(0.0);
-        }
-
         return new Coverage($this->numberOfDocumentedPaths / $this->numberOfPaths);
     }
 }

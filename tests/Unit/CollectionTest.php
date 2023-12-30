@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Ferror\OpenapiCoverage\Unit;
 
-use Ferror\OpenapiCoverage\Collection;
+use Ferror\OpenapiCoverage\RouteCollection;
 use PHPUnit\Framework\TestCase;
 
 final class CollectionTest extends TestCase
 {
     public function testFilter(): void
     {
-        $collection = new Collection(['item', 'not-item']);
+        $collection = new RouteCollection(['item', 'not-item']);
 
         $collection = $collection->filter(fn (string $item) => $item === 'item');
 
@@ -20,7 +20,7 @@ final class CollectionTest extends TestCase
 
     public function testDiff(): void
     {
-        $collection = new Collection(['item-1', 'item-2']);
+        $collection = new RouteCollection(['item-1', 'item-2']);
 
         $collection = $collection->diff(['item-1']);
 
@@ -29,7 +29,7 @@ final class CollectionTest extends TestCase
 
     public function testMap(): void
     {
-        $collection = new Collection(['item', 'item']);
+        $collection = new RouteCollection(['item', 'item']);
 
         $collection = $collection->map(fn (string $item) => $item . '-not');
 

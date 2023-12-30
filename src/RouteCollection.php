@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Ferror\OpenapiCoverage;
 
-final readonly class Collection
+final readonly class RouteCollection
 {
-    public static function create(array $items): self
+    public static function create(array $items = []): self
     {
         return new self($items);
     }
 
+    /**
+     * @param Route[] $items
+     */
     public function __construct(public array $items)
     {
     }
@@ -33,5 +36,21 @@ final readonly class Collection
     public function count(): int
     {
         return count($this->items);
+    }
+
+    public function contains(Route $route): bool
+    {
+        foreach ($this->items as $item) {
+            if ($item->equals($route)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function add(Route $route): self
+    {
+        return new self(array_merge($this->items, [$route]));
     }
 }
