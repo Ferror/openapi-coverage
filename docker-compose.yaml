@@ -12,6 +12,7 @@ services:
     environment:
       XDEBUG_MODE: coverage
 #      XDEBUG_MODE: debug
+#      PHP_IDE_CONFIG: "serverName=docker"
 #      XDEBUG_CONFIG: "profiler_enable=on idekey=PHPSTORM client_host=host.docker.internal"
     volumes:
       - ./:/app:delegate
