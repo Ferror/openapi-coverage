@@ -7,6 +7,7 @@ services:
         PHP_VERSION: 8.2
         COMPOSER_VERSION: 2.5
         EXTENSION_INSTALLER_VERSION: 2.1
+        XDEBUG_VERSION: 3.3.1
     command: ["composer", "install", "--no-interaction"]
     environment:
       XDEBUG_MODE: coverage

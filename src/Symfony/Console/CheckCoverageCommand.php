@@ -10,6 +10,7 @@ use Ferror\OpenapiCoverage\Route;
 use Nelmio\ApiDocBundle\Render\RenderOpenApi;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -60,23 +61,38 @@ class CheckCoverageCommand extends Command
 
         $missingPaths = RouteCollection::create();
 
-        foreach ($paths->items as $path) {
-            if (!$openApiPaths->contains($path)) {
-                $missingPaths->add($path);
+        // Calculate not documented paths
+        foreach ($openApiPaths->items as $path) {
+            if (!$paths->contains($path)) {
+                $missingPaths = $missingPaths->add($path);
             }
         }
 
-        $coverageCalculator = new CoverageCalculator($paths->count(), $openApiPaths->count());
+        $notExistingPaths = RouteCollection::create();
+
+        // Calculate not existing, documented paths
+        foreach ($paths->items as $path) {
+            if (!$openApiPaths->contains($path)) {
+                $notExistingPaths = $notExistingPaths->add($path);
+            }
+        }
+
+        $coverageCalculator = new CoverageCalculator($paths->count(), $openApiPaths->count() - $notExistingPaths->count());
 
         $output->writeln('Open API coverage: ' . $coverageCalculator->calculate()->asPercentage() . '%');
 
         if ($missingPaths->count() === 0) {
             $output->writeln('OpenAPI schema covers all Symfony routes. Good job!');
         } else {
-            $output->writeln('Missing paths in OpenAPI schema:');
-            foreach ($missingPaths->items as $path) {
-                $output->writeln($path->path);
+            $table = new Table($output);
+            $table->setHeaderTitle('Missing documentation');
+            $table->setHeaders(['path', 'method']);
+
+            foreach ($missingPaths->items as $route) {
+                $table->addRow([$route->path, $route->method]);
             }
+
+            $table->render();
         }
 
         return Command::SUCCESS;

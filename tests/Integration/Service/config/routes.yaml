@@ -9,3 +9,7 @@ rest_product_post:
 rest_product_delete:
   path: /v1/products/:id
   methods: DELETE
+
+rest_product_put:
+  path: /v1/products/:id
+  methods: PUT

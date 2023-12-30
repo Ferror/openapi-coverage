@@ -14,6 +14,7 @@ final readonly class Route
 
     public function equals(self $self): bool
     {
-        return $this->path === $self->path && $this->method === $self->method;
+        return strtoupper($this->path) === strtoupper($self->path)
+            && strtoupper($this->method) === strtoupper($self->method);
     }
 }

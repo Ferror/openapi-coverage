@@ -26,6 +26,7 @@ class Kernel extends SymfonyKernel
     {
         $loader->load(__DIR__ . '/config/framework.yaml');
         $loader->load(__DIR__ . '/config/library.yaml');
+        $loader->load(__DIR__ . '/config/services.yaml');
 
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', [

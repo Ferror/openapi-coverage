@@ -16,4 +16,11 @@ final class RouteTest extends TestCase
         $this->assertTrue($route->equals(new Route('products', 'get')));
         $this->assertFalse($route->equals(new Route('products', 'post')));
     }
+
+    public function testEqualsWithDifferentCase(): void
+    {
+        $route = new Route('products', 'get');
+
+        $this->assertTrue($route->equals(new Route('products', 'GET')));
+    }
 }

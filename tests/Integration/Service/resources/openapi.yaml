@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  title: Product API
+  version: 1.0.0
+paths:
+  /products:
+    get:
+      summary: Get all products
+      responses:
+        '200':
+          description: Successful response
+    post:
+      summary: Create a new product
+      requestBody:
+        description: Product object
+        required: true
+        content:
+          application/json:
+            example:
+              id: 1
+              name: "Sample Product"
+              description: "A sample product description"
+              price: 29.99
+      responses:
+        '201':
+          description: Product created successfully
+        '400':
+          description: Invalid request
+
+  /products/:id:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the product
+      summary: Get a product by ID
+      responses:
+        '200':
+          description: Successful response
+        '404':
+          description: Product not found
+    delete:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the product
+      summary: Delete a product by ID
+      responses:
+        '204':
+          description: Product deleted successfully
+        '404':
+          description: Product not found

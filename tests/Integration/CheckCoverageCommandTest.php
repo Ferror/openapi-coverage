@@ -23,15 +23,16 @@ class CheckCoverageCommandTest extends KernelTestCase
 
         $display = $commandTester->getDisplay();
 
-//        $expectedDisplay = <<<TEXT
-//Open API coverage: 0%
-//Missing paths in OpenAPI schema:
-///products
-///products
-///products/:id
-//
-//TEXT;
-//
-//        $this->assertEquals($expectedDisplay, $display);
+        $expectedDisplay = <<<TEXT
+Open API coverage: 75%
++- Missing documenta... -+
+| path          | method |
++---------------+--------+
+| /products/:id | get    |
++---------------+--------+
+
+TEXT;
+
+        $this->assertEquals($expectedDisplay, $display);
     }
 }
