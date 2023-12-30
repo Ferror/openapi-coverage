@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ferror\OpenapiCoverage\Unit;
 
+use Ferror\OpenapiCoverage\Route;
 use Ferror\OpenapiCoverage\RouteCollection;
 use PHPUnit\Framework\TestCase;
 
@@ -11,28 +12,27 @@ final class CollectionTest extends TestCase
 {
     public function testFilter(): void
     {
-        $collection = new RouteCollection(['item', 'not-item']);
+        $collection = new RouteCollection([new Route('products', 'get'), new Route('products', 'post')]);
 
-        $collection = $collection->filter(fn (string $item) => $item === 'item');
+        $collection = $collection->filter(fn (Route $item) => $item->path !== 'products');
 
-        $this->assertEquals(['item'], $collection->items);
-    }
-
-    public function testDiff(): void
-    {
-        $collection = new RouteCollection(['item-1', 'item-2']);
-
-        $collection = $collection->diff(['item-1']);
-
-        $this->assertEquals(['item-2'], $collection->items);
+        $this->assertEquals([], $collection->items);
     }
 
     public function testMap(): void
     {
-        $collection = new RouteCollection(['item', 'item']);
+        $collection = new RouteCollection([new Route('products', 'get'), new Route('products', 'post')]);
 
-        $collection = $collection->map(fn (string $item) => $item . '-not');
+        $collection = $collection->map(fn (Route $item) => new Route($item->path . '-not', $item->method));
 
-        $this->assertEquals(['item-not', 'item-not'], $collection->items);
+        $this->assertEquals([new Route('products-not', 'get'), new Route('products-not', 'post')], $collection->items);
+    }
+
+    public function testContains(): void
+    {
+        $collection = new RouteCollection([new Route('products', 'get'), new Route('products', 'post')]);
+
+        $this->assertTrue($collection->contains(new Route('products', 'get')));
+        $this->assertFalse($collection->contains(new Route('products', 'delete')));
     }
 }

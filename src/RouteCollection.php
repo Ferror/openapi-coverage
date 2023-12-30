@@ -28,11 +28,6 @@ final readonly class RouteCollection
         return new self(array_map($callable, $this->items));
     }
 
-    public function diff(array $items): self
-    {
-        return new self(array_values(array_diff($this->items, $items)));
-    }
-
     public function count(): int
     {
         return count($this->items);
