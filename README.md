@@ -18,7 +18,7 @@ return [
 ];
 ```
 
-## usage
+## Usage
 
 ```bash
 php bin/console ferror:check-openapi-coverage
