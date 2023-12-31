@@ -37,3 +37,6 @@ jobs:
       - # Runs unit and integration tests, like phpspec, phpunit etc.
         name: Run Tests
         run: composer test
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2.2.3
