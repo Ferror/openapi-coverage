@@ -1,3 +1,5 @@
+![Coverage Status](https://coveralls.io/repos/github/Ferror/openapi-coverage/badge.svg?branch=master)
+
 # Open API Coverage Calculator Symfony Bundle
 
 The Open API Coverage Calculator Symfony Bundle enables you to track another system metric - The API Documentation Coverage.
