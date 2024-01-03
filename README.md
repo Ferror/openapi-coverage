@@ -26,6 +26,12 @@ return [
 php bin/console ferror:check-openapi-coverage
 ```
 
+> You can also specify the --threshold or (--t) option to define coverage level below which the command will fail.
+
+```bash
+php bin/console ferror:check-openapi-coverage --threshold 0.70
+```
+
 ## Example Result
 
 ```

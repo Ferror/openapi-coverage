@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ferror\OpenapiCoverage\Symfony\Console;
 
+use Ferror\OpenapiCoverage\Coverage;
 use Ferror\OpenapiCoverage\RouteCollection;
 use Ferror\OpenapiCoverage\CoverageCalculator;
 use Ferror\OpenapiCoverage\Route;
@@ -12,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -25,6 +27,7 @@ class CheckCoverageCommand extends Command
         private readonly string $prefix = '/v1',
     ) {
         parent::__construct('ferror:check-openapi-coverage');
+        $this->addOption('threshold', 't', InputOption::VALUE_OPTIONAL);
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
@@ -78,8 +81,9 @@ class CheckCoverageCommand extends Command
         }
 
         $coverageCalculator = new CoverageCalculator($paths->count(), $openApiPaths->count() - $notExistingPaths->count());
+        $coverage = $coverageCalculator->calculate();
 
-        $output->writeln('Open API coverage: ' . $coverageCalculator->calculate()->asPercentage() . '%');
+        $output->writeln('Open API coverage: ' . $coverage->asPercentage() . '%');
 
         if ($missingPaths->count() === 0) {
             $output->writeln('OpenAPI schema covers all Symfony routes. Good job!');
@@ -93,6 +97,12 @@ class CheckCoverageCommand extends Command
             }
 
             $table->render();
+        }
+
+        if ($threshold = $input->getOption('threshold')) {
+            if ($coverage->isLower(new Coverage($threshold))) {
+                return Command::FAILURE;
+            }
         }
 
         return Command::SUCCESS;

@@ -6,6 +6,7 @@ namespace Ferror\OpenapiCoverage\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class CheckCoverageCommandTest extends KernelTestCase
@@ -34,5 +35,29 @@ Open API coverage: 75%
 TEXT;
 
         $this->assertEquals($expectedDisplay, $display);
+    }
+
+    public function testPositiveThreshold(): void
+    {
+        $kernel = self::bootKernel();
+        $application = new Application($kernel);
+
+        $command = $application->find('ferror:check-openapi-coverage');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['--threshold' => 0.70]);
+
+        $commandTester->assertCommandIsSuccessful();
+    }
+
+    public function testNegativeThreshold(): void
+    {
+        $kernel = self::bootKernel();
+        $application = new Application($kernel);
+
+        $command = $application->find('ferror:check-openapi-coverage');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['--threshold' => 0.80]);
+
+        $this->assertEquals(Command::FAILURE, $commandTester->getStatusCode());
     }
 }
